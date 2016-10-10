@@ -56,6 +56,7 @@ class Network(object):
       self.outputs = self.value + (self.advantage - 
           tf.reduce_mean(self.advantage, reduction_indices=1, keep_dims=True))
 
+
     self.max_outputs = tf.reduce_max(self.outputs, reduction_indices=1)
     self.outputs_idx = tf.placeholder('int32', [None, None], 'outputs_idx')
     self.outputs_with_idx = tf.gather_nd(self.outputs, self.outputs_idx)
@@ -89,3 +90,6 @@ class Network(object):
   def calc_outputs_with_idx(self, observation, idx):
     return self.outputs_with_idx.eval(
         {self.inputs: observation, self.outputs_idx: idx}, session=self.sess)
+
+  def debug(self,observation):
+    return self.outputs.eval({self.inputs: observation}, session=self.sess)

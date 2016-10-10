@@ -17,7 +17,7 @@ class DeepQ(Agent):
       self.targets = tf.placeholder('float32', [None], name='target_q_t')
       self.actions = tf.placeholder('int64', [None], name='action')
 
-      actions_one_hot = tf.one_hot(self.actions, self.env.action_size, 1.0, 0.0, name='action_one_hot')
+      actions_one_hot = tf.one_hot(self.actions, self.env.action_space, 1.0, 0.0, name='action_one_hot')
       pred_q = tf.reduce_sum(self.pred_network.outputs * actions_one_hot, reduction_indices=1, name='q_acted')
 
       self.delta = self.targets - pred_q

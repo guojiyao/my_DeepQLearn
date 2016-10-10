@@ -27,6 +27,7 @@ class TorcsEnvironment(object):
         if action == -1:
           # Step with random action
           action = np.tanh(np.random.randn(self.action_space))
+          print("random action:",action)
 
         cumulated_reward = 0
 
@@ -40,5 +41,7 @@ class TorcsEnvironment(object):
     def preprocess(self,raw_screen):
         y = 0.2126 * raw_screen[0] + 0.7152 * raw_screen[1] + 0.0722 * raw_screen[2]
         y = y.astype(np.uint8)
+        #print(y.shape)
         y_screen = cv2.resize(y, (self.observation_dims[0],self.observation_dims[1]))
+        
         return y_screen

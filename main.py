@@ -52,6 +52,8 @@ flags.DEFINE_boolean('double_q', False, 'Whether to use double Q-learning')
 flags.DEFINE_integer('batch_size', 32, 'The size of batch for minibatch training')
 flags.DEFINE_integer('memory_size', 100, 'The size of experience memory (*= scale)')
 
+flags.DEFINE_boolean('is_train', True, 'Whether to do training or testing')
+flags.DEFINE_integer('t_train_max', 5000, 'The maximum number of t while training (*= scale)')
 
 
 def calc_gpu_fraction(fraction_string):
@@ -114,6 +116,10 @@ with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
 								   name='target_network', trainable=False)
 
 		stat = Statistic(sess, conf.t_test, conf.t_learn_start, model_dir, list(pred_network.var.values()))
-		agent = Agent(sess, pred_network, env, stat, conf, target_network=target_network)
+		agent = TrainAgent(sess, pred_network, env, stat, conf, target_network=target_network)
 
-		agent.play(conf.ep_end)
+
+		if (conf.is_train):
+			agent.train(conf.t_train_max)
+		else:
+			agent.play(conf.ep_end)

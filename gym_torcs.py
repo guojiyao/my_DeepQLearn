@@ -213,7 +213,7 @@ class TorcsEnv:
         time.sleep(0.5)
 
     def agent_to_torcs(self, u):
-        torcs_action = {'steer': u[0]}
+        torcs_action = {'steer': u[0]-1}
 
         if self.throttle is True:  # throttle action is enabled
             torcs_action.update({'accel': u[1]})

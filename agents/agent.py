@@ -76,7 +76,8 @@ class Agent(object):
       # 1. predict
       action = self.predict(self.history.get(), ep)
       # 2. act
-      observation, reward, terminal, info = self.env.make_step(action, is_training=True)
+      observation, reward, terminal, info = self.env.make_step([action], is_training=True)
+      print("action value:",action)
       # 3. observe
       q, loss, is_update = self.observe(observation, reward, action, terminal)
 
@@ -110,11 +111,13 @@ class Agent(object):
       for self.t in tqdm(range(n_step), ncols=70):
         # 1. predict
         action = self.predict(self.history.get(), test_ep)
+        value = self.pred_network.debug([self.history.get()])
+
         frame = self.history.get()
         #print("history",frame.shape)
-        print("action_value=",action)
+        print("action_value=",value)
         # 2. act
-        observation, reward, terminal, info = self.env.make_step(action=-1, is_training=True)
+        observation, reward, terminal, info = self.env.make_step([action], is_training=True)
         # 3. observe
         #q, loss, is_update = self.observe(observation, reward, action, terminal)
 
@@ -144,7 +147,7 @@ class Agent(object):
     if random.random() < ep:
       action = random.randrange(self.env.action_space)
     else:
-      action = self.pred_network.calc_actions([s_t])[0]
+      action = self.pred_network.calc_outputs([s_t])[0]
     return action
 
   def q_learning_minibatch_test(self):
